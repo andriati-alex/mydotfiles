@@ -1,0 +1,24 @@
+These are some dependencies requires in order to these config work
+plus some essential tools for software developemnt
+    - xmonad a good place to start https://www.youtube.com/watch?v=3noK4GTmyMw
+    - vim https://github.com/vim/vim
+    - nvim https://github.com/neovim/neovim
+    - nerdfonts https://www.nerdfonts.com/
+    - python enviroments https://github.com/pyenv/pyenv
+    - see also https://github.com/pyenv/pyenv-virtualenv
+    - manage python package https://python-poetry.org/
+    - `amixer` for command line audio control (required in xmonad config)
+    - see also `alsamixer`
+    - `nmcli` as network manager (required in xmonad config)
+    - `stalonetray` (required in xmonad config)
+    - `nitrogen` (required in xmonad config)
+    - `lxappearance` can be useful to change icons theme in xmonad
+    - Latex (see also the revtex package for aps papers)
+    - Intel compiler https://software.intel.com/content/www/us/en/develop/tools/oneapi.html#gs.4vg9cy
+    - It is worth to have a look in intel python distribution
+    - `dmenu` is a must-have tool for xmonad
+    - `rofi` https://github.com/davatorium/rofi is a nicer sub for `dmenu`
+    - https://ohmyz.sh/
+    - https://terminalroot.com.br/2018/02/como-instalar-e-usar-o-shell-zsh-e-o-oh-my-zsh.html
+    - https://blog.rocketseat.com.br/terminal-com-oh-my-zsh-spaceship-dracula-e-mais/
+    - https://github.com/ohmyzsh/ohmyzsh/wiki/Installing-ZSH
