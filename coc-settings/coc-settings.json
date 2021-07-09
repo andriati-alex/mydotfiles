@@ -1,0 +1,54 @@
+{
+    "languageserver": {
+        "python": {
+            "command": "/usr/bin/python",
+            "args": [
+              "-mpylsp",
+              "-vv",
+              "--log-file",
+              "/tmp/lsp_python.log"
+            ],
+            "trace.server": "verbose",
+            "filetypes": ["python"],
+            "settings": {
+                "pylsp": {
+                    "enable": true,
+                    "trace": {"server": "verbose"},
+                    "commandPath": "",
+                    "configurationSources": ["pycodestyle", "pyflakes"],
+                    "plugins": {
+                        "jedi_completion": {"enabled": true},
+                        "jedi_hover": {"enabled": true},
+                        "jedi_references": {"enabled": true},
+                        "jedi_signature_help": {"enabled": true},
+                        "jedi_symbols": {"enabled": true, "all_scopes": true},
+                        "mccabe": {"enabled": false, "threshold": 15},
+                        "preload": {"enabled": true},
+                        "pycodestyle": {
+                            "enabled": true,
+                            "ignore": ["W605", "W503", "E203"]
+                        },
+                        "pydocstyle": {"enabled": false},
+                        "pyflakes": {"enabled": true},
+                        "rope_completion": {"enabled": true},
+                        "yapf": {"enabled": false}
+                    }
+                }
+            }
+        },
+        "cmake": {
+            "command": "cmake-language-server",
+            "filetypes": ["cmake"],
+            "rootPatterns": ["build/"],
+            "initializationOptions": {"buildDirectory": "build"}
+        },
+        "ccls": {
+            "command": "ccls",
+            "filetypes": ["c", "cc", "cpp", "c++", "cuda", "objc", "objcpp"],
+            "rootPatterns": [".ccls", "compile_commands.json", ".git/", ".hg/"],
+            "initializationOptions": {
+                "cache": {"directory": "/tmp/ccls"}
+            }
+        }
+    }
+}

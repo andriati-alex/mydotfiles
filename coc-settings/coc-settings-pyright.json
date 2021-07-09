@@ -1,0 +1,6 @@
+{
+    "pyright.enable" : true,
+    "python.formatting.provider" : "black",
+    "python.linting.pycodestyleEnabled" : true,
+    "python.linting.pycodestyleArgs" : ["--ignore", "W605"]
+}
