@@ -82,7 +82,7 @@ class fzf_select(Command):
 
         exclude = "--exclude __pycache__ --exclude .git --exclude Steam --exclude '*.pyc'"
         find_types = "--type d --type f"
-        fzf_command = "fdfind {} {} --color=always".format(exclude, find_types)
+        fzf_command = "fd {} {} --color=always".format(exclude, find_types)
 
         fzf = self.fm.execute_command(
             "{} | fzf --ansi --no-multi".format(fzf_command),
