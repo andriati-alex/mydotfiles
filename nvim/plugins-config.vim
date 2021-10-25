@@ -1,8 +1,10 @@
+let g:webdevicons_enable = 1
+
 " -----------------------------------------------------------------------------
 " LIGHTLINE CONFIG
 
 let g:lightline = {
-      \ 'colorscheme': 'sonokai',
+      \ 'colorscheme': 'molokai',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
       \             [ 'gitbranch', 'cocstatus', 'readonly', 'filename' ] ],
@@ -40,6 +42,7 @@ endfunction
 
 " To display nice icon according to file type
 function! MyFiletype()
+  " return winwidth(0) > 70 ? (strlen(&filetype) ? WebDevIconsGetFileTypeSymbol(expand('%:t')) : 'no ft') : ''
   return winwidth(0) > 70 ? (strlen(&filetype) ? WebDevIconsGetFileTypeSymbol() : 'no ft') : ''
 endfunction
 
@@ -47,11 +50,22 @@ function! MyFileformat()
   return winwidth(0) > 70 ? (&fileformat . ' ' . WebDevIconsGetFileFormatSymbol()) : ''
 endfunction
 
+
 " -----------------------------------------------------------------------------
 " TELESCOPE
 
 lua << EOF
 require('telescope').setup{
+    defaults = {
+        layout_strategy = "vertical",
+        layout_config = {
+            width=0.9,
+            preview_height=0.6,
+            preview_cutoff=22,
+        },
+        prompt_prefix = "🔍 ",
+        selection_caret = " ",
+    },
     extensions = {
         fzf = {
             fuzzy = true,                    -- false will only do exact matching
@@ -66,6 +80,7 @@ EOF
 
 nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files()<cr>
 nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
+nnoremap <leader>fs <cmd>lua require('telescope.builtin').grep_string()<cr>
 
 " -----------------------------------------------------------------------------
 
@@ -158,11 +173,25 @@ nmap <silent> ]g <Plug>(coc-diagnostic-next)
 " Symbol renaming.
 nmap <leader>rn <Plug>(coc-rename)
 
-" update lighline whenever some error is detected
+" update lightline whenever some error is detected
 autocmd User CocStatusChange,CocDiagnosticChange call lightline#update()
 
 " Show all diagnostics.
 nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
+"
+" Add `:Format` command to format current buffer.
+command! -nargs=0 Format :call CocAction('format')
+nnoremap <leader>; :Format<CR>
+
+" Remap <C-f> and <C-b> for scroll float windows/popups.
+if has('nvim-0.4.0') || has('patch-8.2.0750')
+  nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+  nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+  inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
+  inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
+  vnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+  vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+endif
 
 " -----------------------------------------------------------------------------
 " COLORSCHEME
@@ -205,3 +234,80 @@ let g:sonokai_menu_selection_background = 'green'
 
 
 colorscheme sonokai
+
+" configure treesitter
+lua << EOF
+require'nvim-treesitter.configs'.setup {
+  highlight = {
+    enable = true,
+    disable = { "cmake"},  -- list of language that will be disabled
+  }
+}
+EOF
+
+"" Misc
+"highlight TSError guifg=#F44747
+"highlight TSPunctDelimiter gui=Bold guifg=#9e3737
+"highlight TSPunctBracket guifg=#FF6D18
+"highlight TSPunctSpecial guifg=#ABB2BF
+"
+"" Constants
+"highlight TSConstant gui=Italic guifg=#DCDCAA
+"highlight TSConstBuiltin guifg=#569CD6
+"" Not sure about this guy
+"highlight TSConstMacro guifg=#4EC9B0
+"highlight TSString guifg=#CE9178
+"highlight TSStringRegex guifg=#CE9178
+"highlight TSStringEscape guifg=#dcca81
+"highlight TSCharacter guifg=#CE9178
+"highlight TSNumber guifg=#f4ab95
+"highlight TSBoolean guifg=#569CD6
+"highlight TSFloat guifg=#f4ab95
+"highlight TSAnnotation guifg=#DCDCAA
+"highlight TSAttribute guifg=#FF00FF
+"highlight TSNamespace guifg=#FF00FF
+"
+"
+"" Functions
+"" highlight TSFuncBuiltin guifg=#4EC9B0
+"highlight TSFuncBuiltin guifg=#B93911
+"highlight TSFunction gui=Bold guifg=#FF6D18
+"highlight TSFuncMacro guifg=#ECEC87
+"highlight TSParameter guifg=#9CDCFE
+"highlight TSParameterReference guifg=#9CDCFE
+"highlight TSMethod guifg=#ECEC87
+"highlight TSField guifg=#9CDCFE
+"highlight TSProperty guifg=#7aa2b1
+"highlight TSConstructor guifg=#4EC9B0
+"
+"" Keywords
+"highlight TSConditional gui=Bold guifg=#cd64fa
+"highlight TSRepeat gui=Bold guifg=#cd64fa
+"highlight TSLabel guifg=#FF00FF
+"" Does not work for yield and return they should be diff then class and def
+"highlight TSKeyword gui=Italic guifg=#569CD6
+"highlight TSKeywordFunction guifg=#FF00FF
+"highlight TSKeywordOperator guifg=#569CD6
+"highlight TSOperator guifg=#DA7575
+"highlight TSException guifg=#C586C0
+"highlight TSType gui=Italic guifg=#4EC9B0
+"highlight TSTypeBuiltin guifg=#FF00FF
+"highlight TSStructure guifg=#FF00FF
+"highlight TSInclude gui=Bold guifg=#FF00FF
+"
+"" Variable
+"highlight TSVariable guifg=#DEDEDE
+"highlight TSVariableBuiltin guifg=#FFFFFF
+"
+"" Text
+"highlight TSText guifg=#FF00FF
+"highlight TSStrong guifg=#FF00FF
+"highlight TSEmphasis guifg=#FF00FF
+"highlight TSUnderline guifg=#FF00FF
+"highlight TSTitle guifg=#FF00FF
+"highlight TSLiteral guifg=#FF00FF
+"highlight TSURI guifg=#FF00FF
+"
+"" Tags
+"highlight TSTag guifg=#569CD6
+"highlight TSTagDelimiter guifg=#5C6370

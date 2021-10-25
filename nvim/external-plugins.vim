@@ -4,7 +4,6 @@ call plug#begin('~/.config/nvim/autoload/plugged')
     Plug 'nvim-lua/plenary.nvim'
     Plug 'nvim-telescope/telescope.nvim'
     Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
-    Plug 'ryanoasis/vim-devicons'
     Plug 'itchyny/lightline.vim'
     Plug 'itchyny/vim-gitbranch'
     " Plug 'neovim/nvim-lspconfig'
@@ -16,4 +15,7 @@ call plug#begin('~/.config/nvim/autoload/plugged')
     " Plug 'folke/tokyonight.nvim'
     Plug 'sainnhe/sonokai'
     Plug 'mhinz/vim-startify'
+    Plug 'ap/vim-css-color'
+    Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+    Plug 'ryanoasis/vim-devicons'
 call plug#end()
