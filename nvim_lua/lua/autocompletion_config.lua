@@ -304,26 +304,14 @@ nvim_lspconfig['ccls'].setup {
   },
 }
 
---nvim_lspconfig['pyright'].setup {
---    on_attach = on_attach,
---    capabilities = capabilities,
---    settings = {
---        python = {
---            analysis = {
---                typeCheckingMode = "basic",
---                diagnosticMode = "openFilesOnly",
---            },
---        },
---    },
---}
-
--- There is a notable delay to close neovim if pylsp is used
+-- Some time ago I felt a sligth delay on closing python files
 nvim_lspconfig['pylsp'].setup{
     on_attach = on_attach,
     capabilities = capabilities,
     settings = {
         pylsp = {
             plugins = {
+                -- pydocstyle is disabled by default
                 pyflakes = {
                     enabled = true
                 },
@@ -331,7 +319,97 @@ nvim_lspconfig['pylsp'].setup{
                     enabled = true,
                     ignore = {"W605", "W503"},
                 },
+                jedi_completion = {
+                    enabled = true,
+                    fuzzy = true,
+                },
+                rope_completion = {
+                    enabled = false,
+                },
+                -- https://github.com/Richardk2n/pylsp-mypy
+                -- check all options passed to `overrides` with `$ mypy --help$`
+                -- Avoid messing the `overrides` for specific particular needs.
+                -- instead use a configuration file. See mypy documentation.
+                pylsp_mypy = {
+                    enabled = true,
+                    live_mode = true,
+                    dmypy = false, -- Enable with `live_mode = false` to improve lsp reponsiveness
+                    overrides = {
+                        "--ignore-missing-imports",
+                        "--show-column-numbers",
+                        "--show-error-codes",
+                        true},
+                },
             }
         }
     }
 }
+
+--[[ A general multi-purposes diagnostic server
+
+This is a very general tool that support running several linting engines,
+formatters and language servers simultaneously. I tested it only with
+`mypy` trying to reproduce the default lsp behavior and it worked.
+
+Official page:
+https://github.com/iamcco/diagnostic-languageserver
+
+The author also provide specific Coc settings (may be useful)
+https://github.com/iamcco/coc-diagnostic
+
+WARNING:
+The configuration fields are not well documented in the nvim lsp page
+https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#diagnosticls
+
+Thus the following issue can be useful
+https://github.com/iamcco/diagnostic-languageserver/issues/72
+
+See all available linters at
+https://github.com/iamcco/diagnostic-languageserver/wiki/Linters#mypy
+
+--]]
+
+--nvim_lspconfig['diagnosticls'].setup{
+--    on_attach = on_attach,
+--    capabilities = capabilities,
+--    filetypes = {
+--        "python",
+--    },
+--    init_options = {
+--        linters = {
+--            mypy = {
+--                sourceName = "mypy",
+--                command= "mypy",
+--                args= {
+--                    --"--disallow-untyped-calls", -- cannot call untyped functions from typed ones
+--                    --"--disallow-untyped-defs", -- only typed functions can be defined
+--                    --"--check-untyped-defs", -- check inside untyped functions
+--                    "--ignore-missing-imports", -- avoid over-reporting errors from external packages
+--                    "--show-error-codes",
+--                    "--no-color-output",
+--                    "--no-error-summary",
+--                    "--show-column-numbers",
+--                    "--follow-imports=silent",
+--                    --"--python-executable",
+--                    --"/usr/bin/python3",
+--                    "%file"
+--                },
+--                formatPattern =  {
+--                    "^.*:(\\d+?):(\\d+?): ([a-z]+?): (.*)$",
+--                    {
+--                        line = 1,
+--                        column = 2,
+--                        security = 3,
+--                        message = 4
+--                    }
+--                },
+--                --securities =  {
+--                --    error = "error"
+--                --},
+--            },
+--        },
+--        filetypes = {
+--            python = "mypy",
+--        },
+--    },
+--}
