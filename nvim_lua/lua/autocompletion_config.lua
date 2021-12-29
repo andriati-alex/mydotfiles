@@ -46,7 +46,7 @@ local kind_icons = {
   Struct = "",
   Event = "",
   Operator = "",
-  TypeParameter = ""
+  TypeParameter = ""
 }
 
 cmp.setup {
