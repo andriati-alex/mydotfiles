@@ -217,7 +217,7 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
   buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
   buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-  buf_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
+  -- buf_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
   buf_set_keymap('n', '[g', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
   buf_set_keymap('n', ']g', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
   buf_set_keymap('n', '<space>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
@@ -229,7 +229,7 @@ end
 
 -- LSP UI customization
 
-vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false, scope="cursor"})]]
+vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false, source=true, scope="cursor"})]]
 
 local lsp_borders = {
       {"╭", "FloatBorder"},
@@ -304,17 +304,34 @@ nvim_lspconfig['ccls'].setup {
   },
 }
 
-nvim_lspconfig['pyright'].setup {
+--nvim_lspconfig['pyright'].setup {
+--    on_attach = on_attach,
+--    capabilities = capabilities,
+--    settings = {
+--        python = {
+--            analysis = {
+--                typeCheckingMode = "basic",
+--                diagnosticMode = "openFilesOnly",
+--            },
+--        },
+--    },
+--}
+
+-- There is a notable delay to close neovim if pylsp is used
+nvim_lspconfig['pylsp'].setup{
     on_attach = on_attach,
     capabilities = capabilities,
     settings = {
-        python = {
-            analysis = {
-                typeCheckingMode = "basic",
-                diagnosticMode = "openFilesOnly",
-            },
-        },
-    },
+        pylsp = {
+            plugins = {
+                pyflakes = {
+                    enabled = true
+                },
+                pycodestyle = {
+                    enabled = true,
+                    ignore = {"W605", "W503"},
+                },
+            }
+        }
+    }
 }
-
--- There is a notable delay to close neovim if pylsp is used
