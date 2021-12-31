@@ -40,6 +40,8 @@ return packer.startup(function(use)
     use 'sainnhe/sonokai'
     use 'rebelot/kanagawa.nvim'
     use 'LunarVim/darkplus.nvim'
+
+    use 'ap/vim-css-color'
     -- LSP and completion related stuff
     use 'nvim-lua/popup.nvim'
     use 'neovim/nvim-lspconfig'
