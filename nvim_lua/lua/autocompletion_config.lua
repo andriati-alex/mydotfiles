@@ -127,13 +127,16 @@ cmp.setup.cmdline('/', {
 })
 --]]
 
+-- The source for the dictionary must be a plain text file. A way to generate
+-- such a file is with the following command:
+-- aspell -d en_US dump master | aspell -l en expand > american_english.dic
 require("cmp_dictionary").setup({
     dic = {
-        ["tex"] = "/usr/share/dict/american-english",
+        ["tex"] = "~/.config/dicts/american_english.dic",
     },
     -- The following are default values, so you don't need to write them if you don't want to change them
     exact = 2,
-    async = false,
+    async = true,
     capacity = 5,
     debug = false,
 })
@@ -229,7 +232,7 @@ end
 
 -- LSP UI customization
 
-vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false, source=true, scope="cursor"})]]
+vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false, source="always", scope="cursor"})]]
 
 local lsp_borders = {
       {"╭", "FloatBorder"},
