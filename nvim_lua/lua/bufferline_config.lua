@@ -1,11 +1,11 @@
 local diag_indicator = function(count, level, diagnostics_dict, context)
-  if context.buffer:current() then
-    return ''
-  end
-  return ''
+    if context.buffer:current() then
+        return ""
+    end
+    return ""
 end
 
-require('bufferline').setup{
+require("bufferline").setup({
     options = {
         offsets = { { filetype = "NvimTree", text = "Explorer", text_align = "center" } },
         max_name_length = 24,
@@ -17,4 +17,4 @@ require('bufferline').setup{
         show_close_icon = false,
         indicator_icon = "",
     },
-}
+})

@@ -13,21 +13,21 @@
 --vim.cmd [[let g:sonokai_current_word = 'underline' ]]
 
 local overrides_fields = {
-    TSOperator = { style = 'bold'},
+    TSOperator = { style = "bold" },
 }
 
 -- Default options:
-require('kanagawa').setup({
-    undercurl = true,           -- enable undercurls
+require("kanagawa").setup({
+    undercurl = true, -- enable undercurls
     commentStyle = "italic",
     functionStyle = "NONE",
     keywordStyle = "italic",
     statementStyle = "bold",
     typeStyle = "NONE",
     variablebuiltinStyle = "italic",
-    specialReturn = true,       -- special highlight for the return keyword
-    specialException = true,    -- special highlight for exception handling keywords
-    transparent = true,         -- do not set background color
+    specialReturn = true, -- special highlight for the return keyword
+    specialException = true, -- special highlight for exception handling keywords
+    transparent = true, -- do not set background color
     colors = {},
     overrides = overrides_fields,
 })
@@ -36,6 +36,6 @@ local colorscheme = "kanagawa"
 
 local status_ok, _ = pcall(vim.cmd, "colorscheme " .. colorscheme)
 if not status_ok then
-  vim.notify("colorscheme " .. colorscheme .. " not found!")
-  return
+    vim.notify("colorscheme " .. colorscheme .. " not found!")
+    return
 end
