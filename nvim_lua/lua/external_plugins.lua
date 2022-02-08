@@ -12,6 +12,7 @@ if fn.empty(fn.glob(install_path)) > 0 then
         install_path,
     })
     print("Installing packer close and reopen Neovim...")
+    vim.cmd([[packadd packer.nvim]])
 end
 
 -- Use a protected call so we don't get errors on first use
@@ -33,11 +34,11 @@ packer.init({
 return packer.startup(function(use)
     use("wbthomason/packer.nvim") -- Packer manage itself
     -- colorschemes and syntax highlighting with nvim-treesitter
-    use({ "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" })
     use("sainnhe/sonokai")
     use("rebelot/kanagawa.nvim")
     use("LunarVim/darkplus.nvim")
     use("ap/vim-css-color")
+    use({ "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" })
 
     -- LSP and completion related stuff
     use("nvim-lua/popup.nvim")
@@ -49,7 +50,7 @@ return packer.startup(function(use)
     use("hrsh7th/cmp-cmdline")
     use("hrsh7th/cmp-nvim-lua")
     use("f3fora/cmp-spell")
-    -- use 'uga-rosa/cmp-dictionary'
+    use("uga-rosa/cmp-dictionary")
     use("saadparwaiz1/cmp_luasnip") -- Snippets completion
     use("L3MON4D3/LuaSnip") -- Snippets engine
     use("rafamadriz/friendly-snippets") -- Lots of ready to use snippets
@@ -89,7 +90,6 @@ return packer.startup(function(use)
         "nvim-lualine/lualine.nvim",
         requires = { "kyazdani42/nvim-web-devicons", opt = true },
     })
-    use({ "akinsho/bufferline.nvim", requires = "kyazdani42/nvim-web-devicons" })
 
     -- File explorer
     use({
@@ -103,7 +103,7 @@ return packer.startup(function(use)
     })
 
     -- Terminal popup
-    use "akinsho/toggleterm.nvim"
+    use("akinsho/toggleterm.nvim")
 
     -- Automatically set up your configuration after cloning packer.nvim
     -- Put this at the end after all plugins

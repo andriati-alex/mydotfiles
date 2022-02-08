@@ -1,4 +1,13 @@
-require("toggleterm").setup({
+--[[ An internal terminal for fast commands --]]
+--
+-- Use a protected call so we don't get errors on first use
+local status_ok, toggleterm = pcall(require, "toggleterm")
+if not status_ok then
+    vim.notify("Problem to config Toggleterm. Is it installed?")
+    return
+end
+
+toggleterm.setup({
     size = function(term)
         if term.direction == "horizontal" then
             return 15
@@ -24,7 +33,7 @@ require("toggleterm").setup({
         -- the 'curved' border is a custom border type
         -- not natively supported but implemented in this plugin.
         border = "curved", -- 'single' | 'double' | 'shadow' | 'curved' | ... other options supported by win open
-        winblend = 0,
+        winblend = 0, -- Needed to set as 0 otherwise did not work with transparency
         highlights = {
             border = "Normal",
             background = "Normal",

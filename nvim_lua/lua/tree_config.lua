@@ -1,3 +1,12 @@
+--[[ An internal terminal for fast commands --]]
+--
+-- Use a protected call so we don't get errors on first use
+local status_ok, tree = pcall(require, "nvim-tree")
+if not status_ok then
+    vim.notify("Problem to config nvim-tree. Is it installed?")
+    return
+end
+
 vim.g.nvim_tree_icons = {
     default = "",
     symlink = "",
@@ -21,7 +30,7 @@ vim.g.nvim_tree_icons = {
 
 local tree_cb = require("nvim-tree.config").nvim_tree_callback
 
-require("nvim-tree").setup({
+tree.setup({
     disable_netrw = true,
     hijack_netrw = true,
     open_on_setup = false,

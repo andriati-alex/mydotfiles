@@ -1,7 +1,17 @@
+--[[ A fuzzy finder plugin --]]
+--
+-- Use a protected call so we don't get errors on first use
+local status_ok, telescope = pcall(require, "telescope")
+if not status_ok then
+    vim.notify("Problem to config Telescope. Is it installed?")
+    return
+end
+
 local previewers = require("telescope.previewers")
 local layouts = require("telescope.actions.layout")
 
 local new_maker = function(filepath, bufnr, opts)
+    -- New maker to avoid showing too large files
     opts = opts or {}
 
     filepath = vim.fn.expand(filepath)
@@ -17,7 +27,7 @@ local new_maker = function(filepath, bufnr, opts)
     end)
 end
 
-require("telescope").setup({
+telescope.setup({
     defaults = {
         prompt_prefix = " ",
         selection_caret = " ",
@@ -60,6 +70,7 @@ require("telescope").setup({
             "--smart-case",
             "--trim", -- add this value
         },
+        file_ignore_patterns = {".*__pycache__*."},
     },
     extensions = {
         fzf = {

@@ -1,4 +1,13 @@
-require("gitsigns").setup({
+--[[ Plugin to show in live mode Git modifications --]]
+
+-- Use a protected call so we don't get errors on first use
+local status_ok, gitsigns = pcall(require, "gitsigns")
+if not status_ok then
+    vim.notify("Problem to config Gitsigns. Is it installed?")
+    return
+end
+
+gitsigns.setup({
     signs = {
         add = { hl = "GitSignsAdd", text = "▎", numhl = "GitSignsAddNr", linehl = "GitSignsAddLn" },
         change = { hl = "GitSignsChange", text = "~", numhl = "GitSignsChangeNr", linehl = "GitSignsChangeLn" },

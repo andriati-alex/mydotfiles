@@ -1,6 +1,7 @@
 --[[ Set all basic stuff --]]
 
 vim.g.mapleader = " "
+-- vim.opt.clipboard = "unnamedplus" -- allows neovim to access the system clipboard
 vim.opt.termguicolors = true
 vim.opt.confirm = true -- confirm to exit if there are unsave changes
 vim.opt.hlsearch = false -- after hit enter stop highlighting
@@ -18,7 +19,6 @@ vim.opt.softtabstop = 4
 vim.opt.autoindent = true
 vim.opt.smartindent = true
 vim.opt.smarttab = true
-vim.opt.expandtab = true
 -- Finish tab and identation config
 vim.opt.incsearch = true -- jump to result as you type
 vim.opt.scrolloff = 8 -- minimum 8 lines ahead while scrolling
@@ -29,7 +29,9 @@ vim.opt.backup = false
 vim.opt.writebackup = false
 -- mostly only due to completion
 vim.opt.completeopt = { "menuone", "noselect" }
-vim.opt.updatetime = 200
+vim.opt.updatetime = 250
+
+vim.cmd([[let g:c_syntax_for_h = 1]])
 
 require("keybindings")
 require("external_plugins")
@@ -39,9 +41,8 @@ require("treesitter_config")
 require("telescope_config")
 require("gitsigns_config")
 require("lualine_config")
---require('bufferline_config')
 require("tree_config")
-require "toggleterm_config"
+require("toggleterm_config")
 
 -- Starting page when invoked with no filename
 require("alpha").setup(require("alpha.themes.startify").opts)

@@ -7,6 +7,7 @@ Python
     python -m pip install --user --upgrade python-lsp-server jedi
     # install extensions
     python -m pip install --user --upgrade 'python-lsp-server[pyflakes]' 'python-lsp-server[pycodestyle]' 'python-lsp-server[pydocstyle]' pylsp-mypy python-lsp-black
+    npm install -g pyright
 
 Cmake
     python -m pip install --user --upgrade cmake-language-server
@@ -15,12 +16,33 @@ Cmake
 
 local cmp_status_ok, cmp = pcall(require, "cmp")
 if not cmp_status_ok then
+    vim.notify("Problem to load cmp. Is it installed?")
     return
 end
 
 -- Snippets loading
-local luasnip = require("luasnip")
+local status_ok, luasnip = pcall(require, "luasnip")
+if not status_ok then
+    vim.notify("Problem to load luasnip. Is it installed?")
+    return
+end
+
 require("luasnip/loaders/from_vscode").lazy_load()
+
+-- Expand or jump snippets keybindings
+vim.api.nvim_set_keymap(
+    "i",
+    "<c-k>",
+    "<cmd>lua if require('luasnip').jumpable(1) then require('luasnip').jump(1) end<CR>",
+    { silent = true }
+)
+
+vim.api.nvim_set_keymap(
+    "i",
+    "<c-j>",
+    "<cmd>lua if require('luasnip').jumpable(-1) then require('luasnip').jump(-1) end<CR>",
+    { silent = true }
+)
 
 -- Function to handle properly the backspace while completing
 local check_backspace = function()
@@ -74,7 +96,10 @@ cmp.setup({
         ["<C-b>"] = cmp.mapping.scroll_docs(-1),
         ["<C-f>"] = cmp.mapping.scroll_docs(1),
         ["<C-Space>"] = cmp.mapping.complete(),
-        ["<C-e>"] = cmp.mapping.close(),
+        ["<C-e>"] = cmp.mapping {
+            i = cmp.mapping.abort(),
+            c = cmp.mapping.close(),
+        },
         ["<CR>"] = cmp.mapping.confirm({
             behavior = cmp.ConfirmBehavior.Replace,
             select = false, -- If true, take the first option if none is selected
@@ -82,8 +107,6 @@ cmp.setup({
         ["<Tab>"] = function(fallback)
             if cmp.visible() then
                 cmp.select_next_item()
-            elseif luasnip.expand_or_jumpable() then
-                luasnip.expand_or_jump()
             elseif check_backspace() then
                 fallback()
             else
@@ -93,8 +116,6 @@ cmp.setup({
         ["<S-Tab>"] = function(fallback)
             if cmp.visible() then
                 cmp.select_prev_item()
-            elseif luasnip.jumpable(-1) then
-                luasnip.jump(-1)
             else
                 fallback()
             end
@@ -103,7 +124,7 @@ cmp.setup({
     sources = {
         { name = "nvim_lsp" },
         { name = "luasnip" },
-        -- { name = 'dictionary', keyword_length = 2 },
+        { name = "dictionary", keyword_length = 2 },
         { name = "path" },
         { name = "nvim_lua" },
         { name = "buffer" },
@@ -111,7 +132,7 @@ cmp.setup({
     documentation = {
         border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
         maxwidth = 50,
-        maxheight = 8,
+        maxheight = 10,
     },
     formatting = {
         format = function(entry, vim_item)
@@ -121,7 +142,7 @@ cmp.setup({
             vim_item.menu = ({
                 nvim_lsp = "[LSP]",
                 luasnip = "[Snippet]",
-                -- dictionary = "[Dict]",
+                dictionary = "[Dict]",
                 path = "[Path]",
                 nvim_lua = "[Vim]",
                 buffer = "[Buffer]",
@@ -129,31 +150,26 @@ cmp.setup({
             return vim_item
         end,
     },
-    experimental = { ghost_text = true },
+    -- experimental = { ghost_text = true },
 })
-
---[[ This offers autocompletion while searching using buffer as source
-cmp.setup.cmdline('/', {
-  sources = {
-    { name = 'buffer' }
-  }
-})
---]]
 
 -- The source for the dictionary must be a plain text file. A way to generate
 -- such a file is with the following command:
 -- aspell -d en_US dump master | aspell -l en expand > american_english.dic
--- local dict_path = vim.fn.expand("~/.config/dicts/american_english.dic")
---require("cmp_dictionary").setup({
---    dic = {
---        ["tex"] = "/usr/share/hunspell/en_US.dic",
---    },
---    -- The following are default values, so you don't need to write them if you don't want to change them
---    exact = 2,
---    async = true,
---    capacity = 5,
---    debug = false,
---})
+local dict_path = vim.fn.expand("~/.config/dicts/american_english.dic")
+local dict_ok, cmp_dict = pcall(require, "cmp_dictionary")
+if dict_ok then
+    cmp_dict.setup({
+        dic = {
+            ["tex,markdown,text"] = dict_path,
+        },
+        -- The following are default values, so you don't need to write them if you don't want to change them
+        exact = 2,
+        async = true, -- requires lua51-mpack installed
+        capacity = 5,
+        debug = false,
+    })
+end
 
 cmp.setup.cmdline(":", {
     sources = cmp.config.sources({
@@ -171,20 +187,21 @@ capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
 
 local lsp_status_ok, nvim_lspconfig = pcall(require, "lspconfig")
 if not lsp_status_ok then
+    vim.notify("Something wrong with lspconfig. Is is installed?")
     return
 end
 
+-- function to hightlight variable under cursor
 local function lsp_highlight_document(client)
-    -- Set autocommands conditional on server_capabilities
     if client.resolved_capabilities.document_highlight then
         vim.api.nvim_exec(
             [[
-      augroup lsp_document_highlight
-        autocmd! * <buffer>
-        autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
-        autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
-      augroup END
-    ]],
+                augroup lsp_document_highlight
+                autocmd! * <buffer>
+                autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
+                autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
+                augroup END
+            ]],
             false
         )
     end
@@ -202,14 +219,17 @@ local on_attach = function(client, bufnr)
     local opts = { noremap = true, silent = true }
 
     -- maintain signature while typing
-    require("lsp_signature").on_attach({
-        bind = true, -- This is mandatory, otherwise border config won't get registered.
-        hint_enable = true,
-        hint_prefix = " ",
-        handler_opts = {
-            border = "rounded",
-        },
-    }, bufnr)
+    local sig_help_ok, lsp_signature = pcall(require, "lsp_signature")
+    if sig_help_ok then
+        lsp_signature.on_attach({
+            bind = true, -- This is mandatory, otherwise border config won't get registered.
+            hint_enable = true,
+            hint_prefix = " ",
+            handler_opts = {
+                border = "rounded",
+            },
+        }, bufnr)
+    end
 
     -- highlight current variable on cursor hovering
     lsp_highlight_document(client)
@@ -236,6 +256,7 @@ end
 
 -- LSP UI customization
 
+-- Auto show popup with diagnostics
 vim.cmd(
     [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false, source="always", scope="cursor"})]]
 )
@@ -324,7 +345,7 @@ nvim_lspconfig["pylsp"].setup({
                 },
                 pycodestyle = {
                     enabled = true,
-                    ignore = { "W605", "W503" },
+                    ignore = { "W605", "W503", "E203" },
                 },
                 jedi_completion = {
                     enabled = true,
@@ -443,14 +464,21 @@ listed alternative they mention the diagnostic-languageserver
 
 local null_ls = require("null-ls")
 
+-- local pylintrc_file = vim.fn.expand("~/.config/pylint/pylintrc")
 null_ls.setup({
     sources = {
+        -- null_ls.builtins.diagnostics.pylint.with({
+        --     extra_args = {"--rcfile", "/home/andriati/.config/pylint/pylintrc"},
+        --     method = null_ls.methods.DIAGNOSTICS_ON_SAVE,
+        -- }),
         null_ls.builtins.formatting.prettier.with({
             extra_args = { "--no-semi", "--single-quote", "--jsx-single-quote", "--tab-width", "4" },
         }),
         null_ls.builtins.formatting.stylua.with({ extra_args = { "--indent-type", "Spaces" } }),
         null_ls.builtins.diagnostics.eslint_d,
         null_ls.builtins.code_actions.eslint_d,
+        -- django html
+        null_ls.builtins.formatting.djhtml,
     },
     on_attach = on_attach,
 })
