@@ -96,10 +96,10 @@ cmp.setup({
         ["<C-b>"] = cmp.mapping.scroll_docs(-1),
         ["<C-f>"] = cmp.mapping.scroll_docs(1),
         ["<C-Space>"] = cmp.mapping.complete(),
-        ["<C-e>"] = cmp.mapping {
+        ["<C-e>"] = cmp.mapping({
             i = cmp.mapping.abort(),
             c = cmp.mapping.close(),
-        },
+        }),
         ["<CR>"] = cmp.mapping.confirm({
             behavior = cmp.ConfirmBehavior.Replace,
             select = false, -- If true, take the first option if none is selected
@@ -129,10 +129,12 @@ cmp.setup({
         { name = "nvim_lua" },
         { name = "buffer" },
     },
-    documentation = {
-        border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
-        maxwidth = 50,
-        maxheight = 10,
+    window = {
+        documentation = {
+            border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
+            maxwidth = 50,
+            maxheight = 10,
+        },
     },
     formatting = {
         format = function(entry, vim_item)
@@ -150,7 +152,7 @@ cmp.setup({
             return vim_item
         end,
     },
-    -- experimental = { ghost_text = true },
+    experimental = { ghost_text = true },
 })
 
 -- The source for the dictionary must be a plain text file. A way to generate
@@ -237,13 +239,10 @@ local on_attach = function(client, bufnr)
     -- See `:help vim.lsp.*` for documentation on any of the below functions
     buf_set_keymap("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
     buf_set_keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
+    buf_set_keymap("n", "gT", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts)
     buf_set_keymap("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
     buf_set_keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
     buf_set_keymap("n", "<C-k>", "<cmd>lua vim.lsp.buf.signature_help()<CR>", opts)
-    buf_set_keymap("n", "<space>wa", "<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>", opts)
-    buf_set_keymap("n", "<space>wr", "<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>", opts)
-    buf_set_keymap("n", "<space>wl", "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>", opts)
-    buf_set_keymap("n", "<space>D", "<cmd>lua vim.lsp.buf.type_definition()<CR>", opts)
     buf_set_keymap("n", "<space>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
     buf_set_keymap("n", "<space>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
     buf_set_keymap("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
@@ -282,7 +281,8 @@ end
 local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
 function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
     opts = opts or {}
-    opts.border = opts.border or lsp_borders
+    -- opts.border = opts.border or lsp_borders
+    opts.border = lsp_borders
     return orig_util_open_floating_preview(contents, syntax, opts, ...)
 end
 
@@ -360,7 +360,7 @@ nvim_lspconfig["pylsp"].setup({
                 -- instead use a configuration file. See mypy documentation.
                 pylsp_mypy = {
                     enabled = true,
-                    live_mode = true,
+                    live_mode = false,
                     dmypy = false, -- Enable with `live_mode = false` to improve lsp reponsiveness
                     overrides = {
                         "--ignore-missing-imports",

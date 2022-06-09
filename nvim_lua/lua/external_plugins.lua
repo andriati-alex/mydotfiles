@@ -33,12 +33,18 @@ packer.init({
 
 return packer.startup(function(use)
     use("wbthomason/packer.nvim") -- Packer manage itself
+
     -- colorschemes and syntax highlighting with nvim-treesitter
+    use("navarasu/onedark.nvim")
+    use("folke/tokyonight.nvim")
+    use("morhetz/gruvbox")
     use("sainnhe/sonokai")
     use("rebelot/kanagawa.nvim")
     use("LunarVim/darkplus.nvim")
     use("ap/vim-css-color")
     use({ "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" })
+    use("nvim-treesitter/playground")
+    use("p00f/nvim-ts-rainbow")
 
     -- LSP and completion related stuff
     use("nvim-lua/popup.nvim")

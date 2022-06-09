@@ -1,6 +1,6 @@
 --[[ Plugin to provide amazing color highlight syntax --]]
 
--- Use a protected call so we don't get errors on first use
+-- a protected call so we don't get errors on first use
 local status_ok, configs = pcall(require, "nvim-treesitter.configs")
 if not status_ok then
     vim.notify("Problem to config Tresitter. Is it installed?")
@@ -8,7 +8,7 @@ if not status_ok then
 end
 
 configs.setup({
-    ensure_installed = "all",
+    ensure_installed = "maintained",
     sync_install = false,
     ignore_install = { "" }, -- List of parsers to ignore installing
     highlight = {
@@ -17,8 +17,7 @@ configs.setup({
         additional_vim_regex_highlighting = true,
     },
     -- indent = { enable = true, disable = { "yaml" } },
-    rainbow = {
+    playground = {
         enable = true,
-        disable = { "html" },
     },
 })
