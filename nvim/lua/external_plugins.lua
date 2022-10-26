@@ -42,9 +42,10 @@ return packer.startup(function(use)
     use("rebelot/kanagawa.nvim")
     use("LunarVim/darkplus.nvim")
     use("ap/vim-css-color")
-    use({ "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" })
+    use({ "nvim-treesitter/nvim-treesitter", run = function() require('nvim-treesitter.install').update({ with_sync = true }) end, })
     use("nvim-treesitter/playground")
     use("p00f/nvim-ts-rainbow")
+    use({ "catppuccin/nvim", as = "catppuccin" })
 
     -- LSP and completion related stuff
     use("nvim-lua/popup.nvim")
@@ -103,9 +104,6 @@ return packer.startup(function(use)
         requires = {
             "kyazdani42/nvim-web-devicons", -- optional, for file icon
         },
-        config = function()
-            require("nvim-tree").setup({})
-        end,
     })
 
     -- Terminal popup

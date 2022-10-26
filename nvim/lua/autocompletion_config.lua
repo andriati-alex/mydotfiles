@@ -124,8 +124,8 @@ cmp.setup({
     sources = {
         { name = "nvim_lsp" },
         { name = "luasnip" },
-        { name = "dictionary", keyword_length = 2 },
         { name = "path" },
+        { name = "dictionary", keyword_length = 2 },
         { name = "nvim_lua" },
         { name = "buffer" },
     },
@@ -174,6 +174,7 @@ if dict_ok then
 end
 
 cmp.setup.cmdline(":", {
+    mapping = cmp.mapping.preset.cmdline(),
     sources = cmp.config.sources({
         { name = "path" },
     }, {
@@ -183,7 +184,7 @@ cmp.setup.cmdline(":", {
 
 -- required in the following lsp setup
 local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
+capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
 
 -- LSP Configuration
 
@@ -194,19 +195,49 @@ if not lsp_status_ok then
 end
 
 -- function to hightlight variable under cursor
-local function lsp_highlight_document(client)
-    if client.resolved_capabilities.document_highlight then
-        vim.api.nvim_exec(
-            [[
-                augroup lsp_document_highlight
-                autocmd! * <buffer>
-                autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
-                autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
-                augroup END
-            ]],
-            false
-        )
+local function lsp_highlight_document(client, bufnr)
+    if client.server_capabilities.documentHighlightProvider then
+        vim.cmd([[
+            hi! LspReferenceRead cterm=bold ctermbg=red guibg=#1b232d
+            hi! LspReferenceText cterm=bold ctermbg=red guibg=#1b232d
+            hi! LspReferenceWrite cterm=bold ctermbg=red guibg=#1b232d
+        ]])
+        vim.api.nvim_create_augroup("lsp_document_highlight", {
+            clear = false,
+        })
+        vim.api.nvim_clear_autocmds({
+            buffer = bufnr,
+            group = "lsp_document_highlight",
+        })
+        vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+            group = "lsp_document_highlight",
+            buffer = bufnr,
+            callback = vim.lsp.buf.document_highlight,
+        })
+        vim.api.nvim_create_autocmd("CursorMoved", {
+            group = "lsp_document_highlight",
+            buffer = bufnr,
+            callback = vim.lsp.buf.clear_references,
+        })
     end
+end
+
+-- function to auto popup floating window diagnostics
+local function popup_diagnostics(bufnr)
+    vim.api.nvim_create_autocmd("CursorHold", {
+        buffer = bufnr,
+        callback = function()
+            local opts = {
+                focusable = false,
+                close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
+                border = "rounded",
+                source = "always",
+                prefix = " ",
+                scope = "cursor",
+            }
+            vim.diagnostic.open_float(nil, opts)
+        end,
+    })
 end
 
 -- General on-attach
@@ -234,7 +265,10 @@ local on_attach = function(client, bufnr)
     end
 
     -- highlight current variable on cursor hovering
-    lsp_highlight_document(client)
+    lsp_highlight_document(client, bufnr)
+
+    -- popup diagnostics in floating window
+    popup_diagnostics(bufnr)
 
     -- See `:help vim.lsp.*` for documentation on any of the below functions
     buf_set_keymap("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<CR>", opts)
@@ -250,15 +284,10 @@ local on_attach = function(client, bufnr)
     buf_set_keymap("n", "[g", "<cmd>lua vim.diagnostic.goto_prev()<CR>", opts)
     buf_set_keymap("n", "]g", "<cmd>lua vim.diagnostic.goto_next()<CR>", opts)
     buf_set_keymap("n", "<space>q", "<cmd>lua vim.diagnostic.setloclist()<CR>", opts)
-    buf_set_keymap("n", "<space>;", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+    buf_set_keymap("n", "<space>;", "<cmd>lua vim.lsp.buf.format({async = true})<CR>", opts)
 end
 
 -- LSP UI customization
-
--- Auto show popup with diagnostics
-vim.cmd(
-    [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false, source="always", scope="cursor"})]]
-)
 
 local lsp_borders = {
     { "╭", "FloatBorder" },
@@ -313,6 +342,20 @@ nvim_lspconfig["sumneko_lua"].setup({
     },
 })
 
+nvim_lspconfig["gopls"].setup({
+    on_attach = function(client, bufnr)
+        client.server_capabilities.document_formatting = false
+        client.server_capabilities.document_range_formatting = false
+        on_attach(client, bufnr)
+    end,
+    capabilities = capabilities,
+    settings = {
+        gopls = {
+            gofumpt = true,
+        },
+    },
+})
+
 nvim_lspconfig["cmake"].setup({
     on_attach = on_attach,
     capabilities = capabilities,
@@ -332,6 +375,11 @@ nvim_lspconfig["ccls"].setup({
     },
 })
 
+nvim_lspconfig["bashls"].setup({
+    on_attach = on_attach,
+    capabilities = capabilities,
+})
+
 -- Some time ago I felt a sligth delay on closing python files
 nvim_lspconfig["pylsp"].setup({
     on_attach = on_attach,
@@ -340,6 +388,9 @@ nvim_lspconfig["pylsp"].setup({
         pylsp = {
             plugins = {
                 -- pydocstyle is disabled by default
+                preload = {
+                    modules = { "numpy", "pandas" },
+                },
                 pyflakes = {
                     enabled = true,
                 },
@@ -350,6 +401,7 @@ nvim_lspconfig["pylsp"].setup({
                 jedi_completion = {
                     enabled = true,
                     fuzzy = true,
+                    cache_for = { "pandas", "numpy", "matplotlib", "sklearn", "scipy", "tensorflow" },
                 },
                 rope_completion = {
                     enabled = false,
@@ -377,8 +429,8 @@ nvim_lspconfig["pylsp"].setup({
 -- custom on attach to avoid using tsserver formatter
 nvim_lspconfig["tsserver"].setup({
     on_attach = function(client, bufnr)
-        client.resolved_capabilities.document_formatting = false
-        client.resolved_capabilities.document_range_formatting = false
+        client.server_capabilities.document_formatting = false
+        client.server_capabilities.document_range_formatting = false
         on_attach(client, bufnr)
     end,
     capabilities = capabilities,
@@ -474,11 +526,17 @@ null_ls.setup({
         null_ls.builtins.formatting.prettier.with({
             extra_args = { "--no-semi", "--single-quote", "--jsx-single-quote", "--tab-width", "4" },
         }),
+        -- null_ls.builtins.diagnostics.write_good,
+        null_ls.builtins.formatting.golines.with({ extra_args = { "-m", "80" } }),
         null_ls.builtins.formatting.stylua.with({ extra_args = { "--indent-type", "Spaces" } }),
         null_ls.builtins.diagnostics.eslint_d,
         null_ls.builtins.code_actions.eslint_d,
         -- django html
         null_ls.builtins.formatting.djhtml,
+        -- golang revive linter
+        null_ls.builtins.diagnostics.revive.with({
+            method = null_ls.methods.DIAGNOSTICS_ON_SAVE,
+        }),
     },
     on_attach = on_attach,
 })

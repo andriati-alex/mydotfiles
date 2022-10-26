@@ -1,20 +1,13 @@
 --[[ The colorschme --]]
 
 -- Some that are really worth to try out
--- sonokai
 -- kanagawa
 -- darkplus
 -- tokyonight
 -- onedark
+-- catppuccin
 
---vim.cmd [[let g:sonokai_style = 'shusia' ]]
---vim.cmd [[let g:sonokai_transparent_background = 1 ]]
---vim.cmd [[let g:sonokai_enable_italic = 1 ]]
---vim.cmd [[let g:sonokai_diagnostic_virtual_text = 'colored' ]]
---vim.cmd [[let g:sonokai_diagnostic_text_highlight = 1 ]]
---vim.cmd [[let g:sonokai_current_word = 'underline' ]]
-
-local colorscheme_name = "onedark"
+local colorscheme_name = "tokyonight"
 local status_color, colorscheme = pcall(require, colorscheme_name)
 if not status_color then
     vim.notify("Problem to find colorscheme " .. colorscheme_name)
@@ -69,21 +62,22 @@ if colorscheme_name == "onedark" then
         colors = {}, -- Override default colors
         highlights = {
             CursorLineNr = { fg = "#ff1e8c", fmt = "bold" },
-            cTSOperator = { fg = "#ffffbc", fmt = "bold" },
+            cTSOperator = { fg = "#acdfdf", fmt = "bold" },
+            cTSConstant = { fg = "#af8030" },
             LspSignatureActiveParameter = { fg = "#5affff", fmt = "bold,underline" },
-            TSPunctBracket = { fg = "#ffa020" },
+            -- TSPunctBracket = { fg = "#ffa020" },
             TSType = { fmt = "italic" },
-            TSVariable = { fg = "#ffffbe" },
+            TSVariable = { fg = "#cfcf9a" },
             cmakeTSVariable = { fg = "#99809e" },
             Pmenu = { bg = "#140022" },
-            CmpItemAbbrMatch = { fg = "#07ffff", fmt="bold" },
-            rainbowcol1 = { fg = "#30e0e0", fmt = "bold"},
-            rainbowcol2 = { fg = "#afb04f"},
-            rainbowcol3 = { fg = "#efef50"},
-            rainbowcol4 = { fg = "#ef7040"},
-            rainbowcol5 = { fg = "#d060d0"},
-            rainbowcol6 = { fg = "#5f8fd0"},
-            rainbowcol7 = { fg = "#30e0e0"},
+            CmpItemAbbrMatch = { fg = "#07ffff", fmt = "bold" },
+            rainbowcol1 = { fg = "#30e0e0", fmt = "bold" },
+            rainbowcol2 = { fg = "#afb04f" },
+            rainbowcol3 = { fg = "#efef50" },
+            rainbowcol4 = { fg = "#ef7040" },
+            rainbowcol5 = { fg = "#d060d0" },
+            rainbowcol6 = { fg = "#5f8fd0" },
+            rainbowcol7 = { fg = "#30e0e0" },
             StatusLine = { bg = "none" },
             -- TabLine = { bg = "none" },
             TabLineFill = { bg = "none" },
@@ -99,19 +93,44 @@ if colorscheme_name == "onedark" then
 end
 
 if colorscheme_name == "tokyonight" then
-    vim.g.tokyonight_transparent = true
-    vim.g.tokyonight_style = "night"
-    vim.g.tokyonight_sidebars = { "qf", "vista_kind", "terminal", "packer" }
-    vim.g.tokyonight_colors = { bg_float = "none", bg_sidebar = "none" }
-    vim.api.nvim_exec(
-        [[
-            augroup MyColors
-                autocmd!
-                autocmd ColorScheme * highlight CursorLineNr guifg=#FF0099
-            augroup END
-        ]],
-        false
-    )
+    colorscheme.setup({
+        transparent = true,
+        styles = { sidebars = "transparent", floats = "transparent" },
+        on_highlights = function(hl, c)
+            hl.StatusLine = { bg = "none" }
+            hl.CursorLineNr = { fg = c.orange, style = "bold" }
+            hl.TabLineFill = { bg = "none" }
+            hl.rainbowcol1 = { fg = "#30e0e0" }
+            hl.rainbowcol2 = { fg = "#afb04f" }
+            hl.rainbowcol3 = { fg = "#efef50" }
+            hl.rainbowcol4 = { fg = "#ef7040" }
+            hl.rainbowcol5 = { fg = "#d060d0" }
+            hl.rainbowcol6 = { fg = "#5f8fd0" }
+            hl.rainbowcol7 = { fg = "#30e0e0" }
+            hl.CursorLine = { bg = "#161616" }
+        end,
+    })
+end
+
+if colorscheme_name == "catppuccin" then
+    vim.g.catppuccin_flavour = "frappe"
+    colorscheme.setup({
+        transparent_background = true,
+        custom_highlights = {
+            StatusLine = { bg = "none", style = { "bold" } },
+            rainbowcol1 = { fg = "#30e0e0" },
+            rainbowcol2 = { fg = "#afb04f" },
+            rainbowcol3 = { fg = "#efef50" },
+            rainbowcol4 = { fg = "#ef7040" },
+            rainbowcol5 = { fg = "#d060d0" },
+            rainbowcol6 = { fg = "#5f8fd0" },
+            rainbowcol7 = { fg = "#30e0e0" },
+            CursorLine = { bg = "#161616" },
+            NormalFloat = { bg = "none" },
+            CursorLineNr = { fg = "#55eeaa", style = { "bold" } },
+            NvimTreeCursorLine = { bg = "#384561" },
+        },
+    })
 end
 
 local status_cmd, _ = pcall(vim.cmd, "colorscheme " .. colorscheme_name)

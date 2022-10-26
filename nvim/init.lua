@@ -29,7 +29,7 @@ vim.opt.backup = false
 vim.opt.writebackup = false
 -- mostly only due to completion
 vim.opt.completeopt = { "menuone", "noselect" }
-vim.opt.updatetime = 250
+vim.opt.updatetime = 150
 
 vim.cmd([[let g:c_syntax_for_h = 1]])
 
@@ -39,7 +39,7 @@ require("colorscheme_config")
 require("autocompletion_config")
 require("treesitter_config")
 require("telescope_config")
-require("gitsigns_config")
+-- require("gitsigns_config")
 require("lualine_config")
 require("tree_config")
 require("toggleterm_config")

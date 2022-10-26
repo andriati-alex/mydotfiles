@@ -70,7 +70,11 @@ telescope.setup({
             "--smart-case",
             "--trim", -- add this value
         },
-        file_ignore_patterns = { ".*__pycache__*.", "(?!.*[.](c|py)$).*build.*" },
+        file_ignore_patterns = {
+            ".*__pycache__*.",
+            "(?!.*[.](c|py)$).*build.*",
+            ".*.dat$",
+        },
     },
     extensions = {
         fzf = {
@@ -87,18 +91,30 @@ telescope.setup({
 -- load_extension, somewhere after setup function:
 require("telescope").load_extension("fzf")
 
+vim.api.nvim_set_keymap("n", "<leader>fg", "<cmd> lua require('telescope.builtin').live_grep()<CR>", { noremap = true })
+vim.api.nvim_set_keymap("n", "<leader>fb", "<cmd> lua require('telescope.builtin').buffers()<CR>", { noremap = true })
 vim.api.nvim_set_keymap(
     "n",
     "<leader>ff",
     "<cmd> lua require('telescope.builtin').find_files()<CR>",
     { noremap = true }
 )
-vim.api.nvim_set_keymap("n", "<leader>fg", "<cmd> lua require('telescope.builtin').live_grep()<CR>", { noremap = true })
-vim.api.nvim_set_keymap("n", "<leader>fb", "<cmd> lua require('telescope.builtin').buffers()<CR>", { noremap = true })
+vim.api.nvim_set_keymap(
+    "n",
+    "<leader>fs",
+    "<cmd> lua require('telescope.builtin').grep_string()<CR>",
+    { noremap = true }
+)
 vim.api.nvim_set_keymap(
     "n",
     "<leader>fd",
     "<cmd> lua require('telescope.builtin').diagnostics()<CR>",
+    { noremap = true }
+)
+vim.api.nvim_set_keymap(
+    "n",
+    "<leader>fr",
+    "<cmd> lua require('telescope.builtin').lsp_references()<CR>",
     { noremap = true }
 )
 
