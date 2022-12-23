@@ -1,5 +1,5 @@
 --[[ A fuzzy finder plugin --]]
---
+
 -- Use a protected call so we don't get errors on first use
 local status_ok, telescope = pcall(require, "telescope")
 if not status_ok then
@@ -68,7 +68,7 @@ telescope.setup({
             "--line-number",
             "--column",
             "--smart-case",
-            "--trim", -- add this value
+            "--trim",
         },
         file_ignore_patterns = {
             ".*__pycache__*.",
@@ -90,33 +90,6 @@ telescope.setup({
 -- To get fzf loaded and working with telescope, you need to call
 -- load_extension, somewhere after setup function:
 require("telescope").load_extension("fzf")
-
-vim.api.nvim_set_keymap("n", "<leader>fg", "<cmd> lua require('telescope.builtin').live_grep()<CR>", { noremap = true })
-vim.api.nvim_set_keymap("n", "<leader>fb", "<cmd> lua require('telescope.builtin').buffers()<CR>", { noremap = true })
-vim.api.nvim_set_keymap(
-    "n",
-    "<leader>ff",
-    "<cmd> lua require('telescope.builtin').find_files()<CR>",
-    { noremap = true }
-)
-vim.api.nvim_set_keymap(
-    "n",
-    "<leader>fs",
-    "<cmd> lua require('telescope.builtin').grep_string()<CR>",
-    { noremap = true }
-)
-vim.api.nvim_set_keymap(
-    "n",
-    "<leader>fd",
-    "<cmd> lua require('telescope.builtin').diagnostics()<CR>",
-    { noremap = true }
-)
-vim.api.nvim_set_keymap(
-    "n",
-    "<leader>fr",
-    "<cmd> lua require('telescope.builtin').lsp_references()<CR>",
-    { noremap = true }
-)
 
 -- ## Default Mappings
 --

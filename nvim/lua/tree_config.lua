@@ -48,4 +48,4 @@ tree.setup({
     },
 })
 
-vim.api.nvim_set_keymap("n", "<leader>E", "<cmd>NvimTreeToggle<CR>", { noremap = true })
+vim.keymap.set("n", "<leader>E", "<cmd>NvimTreeToggle<CR>")

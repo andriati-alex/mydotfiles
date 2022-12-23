@@ -6,8 +6,9 @@
 -- tokyonight
 -- onedark
 -- catppuccin
+-- rosepine
 
-local colorscheme_name = "tokyonight"
+local colorscheme_name = "rose-pine"
 local status_color, colorscheme = pcall(require, colorscheme_name)
 if not status_color then
     vim.notify("Problem to find colorscheme " .. colorscheme_name)
@@ -95,7 +96,7 @@ end
 if colorscheme_name == "tokyonight" then
     colorscheme.setup({
         transparent = true,
-        styles = { sidebars = "transparent", floats = "transparent" },
+        styles = { sidebars = "transparent" },
         on_highlights = function(hl, c)
             hl.StatusLine = { bg = "none" }
             hl.CursorLineNr = { fg = c.orange, style = "bold" }
@@ -109,6 +110,54 @@ if colorscheme_name == "tokyonight" then
             hl.rainbowcol7 = { fg = "#30e0e0" }
             hl.CursorLine = { bg = "#161616" }
         end,
+    })
+end
+
+if colorscheme_name == "rose-pine" then
+    colorscheme.setup({
+        dark_variant = 'moon',
+        bold_vert_split = false,
+        dim_nc_background = false,
+        disable_background = true,
+        disable_float_background = false,
+        disable_italics = false,
+
+        --- @usage string hex value or named color from rosepinetheme.com/palette
+        groups = {
+            background = 'base',
+            panel = 'surface',
+            border = 'highlight_med',
+            comment = 'muted',
+            link = 'iris',
+            punctuation = 'subtle',
+
+            error = 'love',
+            hint = 'iris',
+            info = 'foam',
+            warn = 'gold',
+
+            headings = {
+                h1 = 'iris',
+                h2 = 'foam',
+                h3 = 'rose',
+                h4 = 'gold',
+                h5 = 'pine',
+                h6 = 'foam',
+            }
+        },
+
+        -- Change specific vim highlight groups
+        highlight_groups = {
+            ColorColumn = { bg = "rose" },
+            StatusLine = { bg = "none" },
+            TabLineFill = { bg = "none" },
+            CursorLineNr = { fg = "rose" },
+            Pmenu = { bg = "#000000" },
+            PmenuSel = { bg = "base" },
+            CmpItemAbbrMatch = { fg = "gold", style = "bold"},
+            CmpItemAbbrMatchFuzzy = { fg = "#b29265", style = "underline"},
+            LspSignatureActiveParameter = { fg = "gold", style = "bold" },
+        }
     })
 end
 
@@ -133,8 +182,4 @@ if colorscheme_name == "catppuccin" then
     })
 end
 
-local status_cmd, _ = pcall(vim.cmd, "colorscheme " .. colorscheme_name)
-if not status_cmd then
-    vim.notify("colorscheme " .. colorscheme_name .. " not found!")
-    return
-end
+vim.cmd.colorscheme(colorscheme_name)
