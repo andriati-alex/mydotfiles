@@ -1,5 +1,4 @@
 --[[ The colorschme --]]
-
 -- Some that are really worth to try out
 -- kanagawa
 -- darkplus
@@ -28,9 +27,9 @@ if colorscheme_name == "kanagawa" then
         statementStyle = "bold",
         typeStyle = "NONE",
         variablebuiltinStyle = "italic",
-        specialReturn = true, -- special highlight for the return keyword
+        specialReturn = true,    -- special highlight for the return keyword
         specialException = true, -- special highlight for exception handling keywords
-        transparent = true, -- do not set background color
+        transparent = true,      -- do not set background color
         colors = {},
         overrides = overrides_fields,
     })
@@ -39,14 +38,13 @@ end
 if colorscheme_name == "onedark" then
     colorscheme.setup({
         -- Main options --
-        style = "warmer", -- Default theme style. Choose between 'dark', 'darker', 'cool', 'deep', 'warm', 'warmer' and 'light'
-        transparent = true, -- Show/hide background
-        term_colors = true, -- Change terminal color as per the selected theme style
-        ending_tildes = false, -- Show the end-of-buffer tildes. By default they are hidden
+        style = "warmer",                                                                    -- Default theme style. Choose between 'dark', 'darker', 'cool', 'deep', 'warm', 'warmer' and 'light'
+        transparent = true,                                                                  -- Show/hide background
+        term_colors = true,                                                                  -- Change terminal color as per the selected theme style
+        ending_tildes = false,                                                               -- Show the end-of-buffer tildes. By default they are hidden
         -- toggle theme style ---
-        toggle_style_key = "<leader>ts", -- Default keybinding to toggle
+        toggle_style_key = "<leader>ts",                                                     -- Default keybinding to toggle
         toggle_style_list = { "dark", "darker", "cool", "deep", "warm", "warmer", "light" }, -- List of styles to toggle between
-
         -- Change code style ---
         -- Options are italic, bold, underline, none
         -- You can configure multiple style with comma seperated, For e.g., keywords = 'italic,bold'
@@ -57,7 +55,6 @@ if colorscheme_name == "onedark" then
             strings = "none",
             variables = "none",
         },
-
         -- Custom Highlights --
         -- use :lua require('telescope.builtin').highlights()
         colors = {}, -- Override default colors
@@ -83,11 +80,10 @@ if colorscheme_name == "onedark" then
             -- TabLine = { bg = "none" },
             TabLineFill = { bg = "none" },
         }, -- Override highlight groups
-
         -- Plugins Config --
         diagnostics = {
-            darker = true, -- darker colors for diagnostic
-            undercurl = true, -- use undercurl instead of underline for diagnostics
+            darker = true,      -- darker colors for diagnostic
+            undercurl = true,   -- use undercurl instead of underline for diagnostics
             background = false, -- use background color for virtual text
         },
     })
@@ -119,9 +115,8 @@ if colorscheme_name == "rose-pine" then
         bold_vert_split = false,
         dim_nc_background = false,
         disable_background = true,
-        disable_float_background = false,
+        disable_float_background = true,
         disable_italics = false,
-
         --- @usage string hex value or named color from rosepinetheme.com/palette
         groups = {
             background = 'base',
@@ -130,12 +125,10 @@ if colorscheme_name == "rose-pine" then
             comment = 'muted',
             link = 'iris',
             punctuation = 'subtle',
-
             error = 'love',
             hint = 'iris',
             info = 'foam',
             warn = 'gold',
-
             headings = {
                 h1 = 'iris',
                 h2 = 'foam',
@@ -145,7 +138,6 @@ if colorscheme_name == "rose-pine" then
                 h6 = 'foam',
             }
         },
-
         -- Change specific vim highlight groups
         highlight_groups = {
             ColorColumn = { bg = "rose" },
@@ -154,9 +146,9 @@ if colorscheme_name == "rose-pine" then
             CursorLineNr = { fg = "rose" },
             Pmenu = { bg = "#000000" },
             PmenuSel = { bg = "base" },
-            CmpItemAbbrMatch = { fg = "gold", style = "bold"},
-            CmpItemAbbrMatchFuzzy = { fg = "#b29265", style = "underline"},
-            LspSignatureActiveParameter = { fg = "gold", style = "bold" },
+            CmpItemAbbrMatch = { fg = "gold", bold = true },
+            CmpItemAbbrMatchFuzzy = { fg = "#b29265", underline = true },
+            LspSignatureActiveParameter = { fg = "gold", bold = true },
         }
     })
 end

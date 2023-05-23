@@ -1,6 +1,6 @@
 --[[ Set all basic stuff --]]
 
-vim.opt.clipboard = "unnamedplus" -- allows neovim to access the system clipboard
+-- vim.opt.clipboard = "unnamedplus" -- allows neovim to access the system clipboard
 vim.opt.termguicolors = true
 vim.opt.confirm = true -- confirm to exit if there are unsave changes
 vim.opt.hlsearch = false -- after hit enter stop highlighting

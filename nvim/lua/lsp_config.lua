@@ -3,7 +3,6 @@
 Besides all LSP stuff, Mason is used to install Language servers
 
 --]]
-
 local lsp_status_ok, nvim_lspconfig = pcall(require, "lspconfig")
 if not lsp_status_ok then
     vim.notify("Something wrong with lspconfig. Is is installed?")
@@ -40,9 +39,12 @@ end
 
 -- general configuration
 -- checkout :h vim.diagnostic.config
-vim.diagnostic.config({ virtual_text = { format = function(diagnostic)
-    return string.format('[%s] %s', diagnostic.code, diagnostic.message)
-end }
+vim.diagnostic.config({
+    virtual_text = {
+        format = function(diagnostic)
+            return string.format('[%s] %s', diagnostic.code, diagnostic.message)
+        end
+    }
 })
 
 -- function to auto popup floating window diagnostics
@@ -111,7 +113,6 @@ local on_attach = function(client, bufnr)
 end
 
 --[[ LSP UI customization --]]
-
 local lsp_borders = {
     { "╭", "FloatBorder" },
     { "─", "FloatBorder" },
@@ -163,7 +164,7 @@ require("mason").setup({
 
 -- Enable the following language servers
 -- Feel free to add/remove any LSPs that you want here. They will automatically be installed
-local ls_servers = { "clangd", "rust_analyzer", "jedi_language_server", "tsserver", "sumneko_lua", "gopls" }
+local ls_servers = { "clangd", "rust_analyzer", "jedi_language_server", "tsserver", "lua_ls", "gopls" }
 local extra_servers = { "revive", "eslint_d", "golines", "prettier", "ruff", "mypy" }
 
 -- Ensure the servers above are installed
@@ -182,41 +183,53 @@ for _, lsp in ipairs(ls_servers) do
 end
 
 --[[ CUSTOM CONFIGURATION OF SERVERS --]]
-
 local runtime_path = vim.split(package.path, ";")
 table.insert(runtime_path, "lua/?.lua")
 table.insert(runtime_path, "lua/?/init.lua")
 
-require("lspconfig").sumneko_lua.setup({
+nvim_lspconfig["ruff_lsp"].setup({
+    on_attach = on_attach,
+    capabilities = capabilities,
+    init_options = {
+        settings = {
+            args = { "--extend-select", "RET", "--extend-select", "ARG", "--extend-select", "C", "--extend-select", "N",
+                "--extend-select", "PD", "--extend-ignore", "ARG002" },
+        }
+    },
+})
+
+nvim_lspconfig["lua_ls"].setup({
     on_attach = on_attach,
     capabilities = capabilities,
     settings = {
         Lua = {
             runtime = {
-                -- Tell the language server which version of Lua you're using (most likely LuaJIT)
-                version = "LuaJIT",
-                -- Setup your lua path
-                path = runtime_path,
+                -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+                version = 'LuaJIT',
             },
             diagnostics = {
-                globals = { "vim" },
+                -- Get the language server to recognize the `vim` global
+                globals = { 'vim' },
             },
-            workspace = { library = vim.api.nvim_get_runtime_file("", true) },
+            workspace = {
+                -- Make the server aware of Neovim runtime files
+                library = vim.api.nvim_get_runtime_file("", true),
+            },
             -- Do not send telemetry data containing a randomized but unique identifier
-            telemetry = { enable = false },
+            telemetry = {
+                enable = false,
+            },
         },
     },
 })
 
 --[[ ADDITIONAL LINTER AND FORMATTERS
 
-The Null-ls plugin provide a bridge to use more external sources to
-feed the neovim LSP. It is very much like diagnostic-languageserver
-described above but written in lua. Even in the README, among the
-listed alternative they mention the diagnostic-languageserver
+The Null-ls plugin provides a bridge to use more external sources to
+feed the neovim LSP. It is very much like diagnostic-languageserver.
 
 --]]
-
+--
 local loaded_null_ls, null_ls = pcall(require, "null-ls")
 if not loaded_null_ls then
     vim.notify("Problem to load null-ls. Is it installed?")
@@ -225,8 +238,10 @@ end
 
 null_ls.setup({
     sources = {
-        null_ls.builtins.diagnostics.ruff.with({ extra_args = { "--extend-select", "RET", "--extend-select", "ARG",
-            "--extend-select", "C", "--extend-select", "N", "--extend-select", "PD", "--extend-ignore", "ARG002" } }),
+        --        null_ls.builtins.diagnostics.ruff.with({
+        --            extra_args = { "--extend-select", "RET", "--extend-select", "ARG",
+        --                "--extend-select", "C", "--extend-select", "N", "--extend-select", "PD", "--extend-ignore", "ARG002" }
+        --        }),
         null_ls.builtins.diagnostics.mypy.with({ extra_args = { "--ignore-missing-imports" }, }),
         null_ls.builtins.formatting.black,
         null_ls.builtins.formatting.prettier.with({

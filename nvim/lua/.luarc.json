@@ -59,5 +59,6 @@
         "/home/andriati/.config/nvim/after",
         "/usr/share/vim/vimfiles",
         "${3rd}/luassert/library"
-    ]
+    ],
+    "workspace.checkThirdParty": false
 }
