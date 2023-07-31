@@ -32,6 +32,7 @@ vim.opt.completeopt = { "menuone", "noselect" }
 vim.opt.updatetime = 250
 
 vim.cmd([[let g:c_syntax_for_h = 1]])
+vim.g.python3_host_prog = "/usr/bin/python"
 
 require("basic_keybindings")
 require("packer_plugins")

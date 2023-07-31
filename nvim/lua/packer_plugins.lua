@@ -45,7 +45,7 @@ return packer.startup(function(use)
     use("nvim-treesitter/nvim-treesitter", { run = ":TSUpdate" })
     -- use("nvim-treesitter/playground")
     use({ 'rose-pine/neovim', as = 'rose-pine' })
-    use("p00f/nvim-ts-rainbow")
+    -- use("p00f/nvim-ts-rainbow")
 
     -- LSP and completion related stuff
     use("nvim-lua/popup.nvim")
@@ -63,7 +63,7 @@ return packer.startup(function(use)
     use("rafamadriz/friendly-snippets") -- Lots of ready to use snippets
     use("ray-x/lsp_signature.nvim") -- maintain popup with function signature
     use({ "williamboman/mason.nvim", requires = { "williamboman/mason-lspconfig.nvim" } })
-    use("jayp0521/mason-null-ls.nvim")
+    use("jay-babu/mason-null-ls.nvim")
     -- LSP auxiliar module for linters and formattters
     use({
         "jose-elias-alvarez/null-ls.nvim",

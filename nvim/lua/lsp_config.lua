@@ -165,7 +165,7 @@ require("mason").setup({
 -- Enable the following language servers
 -- Feel free to add/remove any LSPs that you want here. They will automatically be installed
 local ls_servers = { "clangd", "rust_analyzer", "jedi_language_server", "tsserver", "lua_ls", "gopls" }
-local extra_servers = { "revive", "eslint_d", "golines", "prettier", "ruff", "mypy" }
+local extra_servers = { "revive", "eslint_d", "golines", "prettier", "mypy" }
 
 -- Ensure the servers above are installed
 require("mason-lspconfig").setup({ ensure_installed = ls_servers })
@@ -238,11 +238,8 @@ end
 
 null_ls.setup({
     sources = {
-        --        null_ls.builtins.diagnostics.ruff.with({
-        --            extra_args = { "--extend-select", "RET", "--extend-select", "ARG",
-        --                "--extend-select", "C", "--extend-select", "N", "--extend-select", "PD", "--extend-ignore", "ARG002" }
-        --        }),
-        null_ls.builtins.diagnostics.mypy.with({ extra_args = { "--ignore-missing-imports" }, }),
+        null_ls.builtins.diagnostics.mypy.with({
+            extra_args = { "--ignore-missing-imports", "--disable-error-code", "attr-defined" }, }),
         null_ls.builtins.formatting.black,
         null_ls.builtins.formatting.prettier.with({
             extra_args = { "--no-semi", "--single-quote", "--jsx-single-quote", "--tab-width", "4" },
