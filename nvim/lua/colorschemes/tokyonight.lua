@@ -27,17 +27,6 @@ return {
 			hl.TelescopeResultsTitle = {
 				fg = c.red,
 			}
-			hl.BufferLineDevIconLua = {
-				bg = "#0f1014",
-			}
-			hl.BufferLineDevIconLuaSelected = {
-				bg = "#14161b",
-				fg = c.orange,
-			}
-			hl.BufferLineDevIconLuaInactive = {
-				bg = "#14161b",
-				fg = c.blue,
-			}
 			hl.NvimTreeNormal = {
 				bg = "none",
 			}

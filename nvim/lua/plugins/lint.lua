@@ -5,11 +5,12 @@ return {
 		local lint = require("lint")
 
 		lint.linters.mypy.args = {
-            "--show-column-numbers",
-            "--show-error-end",
-            "--no-color-output",
-            "--no-pretty",
-			"--ignore-missing-imports",
+			"--show-column-numbers",
+			"--show-error-end",
+			"--no-color-output",
+			"--no-pretty",
+			-- "--ignore-missing-imports",
+            "--disable-error-code import-untyped"
 		}
 		lint.linters_by_ft = {
 			python = { "mypy" },

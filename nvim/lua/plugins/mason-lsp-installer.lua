@@ -29,7 +29,15 @@ return {
 				"html",
 				"cssls",
 				"lua_ls",
-				"ruff"
+				"ruff",
+				"docker_compose_language_service",
+				"dockerls",
+				"yamlls",
+				"jsonls",
+				"jinja_lsp",
+				"terraformls",
+				"bashls",
+				"pyright",
 			},
 			automatic_installation = true,
 		})
@@ -41,6 +49,7 @@ return {
 				"stylua", -- lua formatter
 				"eslint_d",
 				"mypy",
+				"shfmt",
 			},
 		})
 	end,
