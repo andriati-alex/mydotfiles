@@ -1,7 +1,0 @@
-%compile_commands.json
-%c -std=c11
--I/home/andriati/projects/1d-mctdhb/include
--I/home/andriati/.local/include
--Wunused-but-set-variable
--Wall
--Wextra

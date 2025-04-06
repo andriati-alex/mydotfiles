@@ -201,7 +201,7 @@ return {
 			ruff = {
 				init_options = {
 					settings = {
-						lineLength = 80,
+						lineLength = 79,
 						lint = {
 							select = { "E", "F", "N" },
 						},
@@ -219,6 +219,21 @@ return {
 						},
 						-- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
 						diagnostics = { disable = { "missing-fields" } },
+					},
+				},
+			},
+			docker_compose_language_service = {},
+			pyright = {
+				settings = {
+					pyright = {
+						-- Using Ruff's import organizer
+						disableOrganizeImports = true,
+					},
+					python = {
+						analysis = {
+							-- Ignore all files for analysis to exclusively use Ruff for linting
+							typeCheckingMode = "off",
+						},
 					},
 				},
 			},
