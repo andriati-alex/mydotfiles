@@ -201,7 +201,7 @@ return {
 			ruff = {
 				init_options = {
 					settings = {
-						lineLength = 79,
+						lineLength = 88,
 						lint = {
 							select = { "E", "F", "N" },
 						},

@@ -20,12 +20,18 @@ return {
 			lua = { "stylua" },
 			markdown = { "prettier" },
 			yaml = { "prettier" },
-            json = { "prettier" },
+			json = { "prettier" },
+			go = { "golines" },
 			-- Conform can also run multiple formatters sequentially
 			-- python = { "isort", "black" },
 			-- You can use 'stop_after_first' to run the first available formatter from the list
 			-- go = { "goimports", "gofmt" },
 			-- javascript = { "prettierd", "prettier", stop_after_first = true },
+		},
+		formatters = {
+			golines = {
+				prepend_args = { "-m", "88" },
+			},
 		},
 	},
 }

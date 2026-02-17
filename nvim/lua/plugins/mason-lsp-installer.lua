@@ -38,6 +38,7 @@ return {
 				"terraformls",
 				"bashls",
 				"pyright",
+				"gopls",
 			},
 			automatic_installation = true,
 		})
@@ -50,6 +51,7 @@ return {
 				"eslint_d",
 				"mypy",
 				"shfmt",
+				"revive",
 			},
 		})
 	end,

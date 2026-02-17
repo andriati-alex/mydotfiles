@@ -1,4 +1,4 @@
-local colorscheme_name = "kanagawa"
+local colorscheme_name = "catppuccin"
 local status_color, _ = pcall(require, colorscheme_name)
 if not status_color then
 	vim.notify("Problem to find colorscheme " .. colorscheme_name)

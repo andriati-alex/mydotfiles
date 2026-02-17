@@ -1,6 +1,6 @@
 return {
 	"nvim-telescope/telescope.nvim",
-	branch = "0.1.x",
+	branch = "master",
 	dependencies = {
 		"nvim-lua/plenary.nvim",
 		{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
@@ -24,7 +24,7 @@ return {
 			},
 		})
 		pcall(telescope.load_extension, "fzf")
-		-- pcall(telescope.load_extension, 'ui-select')
+		pcall(telescope.load_extension, 'ui-select')
 
 		vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "[F]uzzy find files in cwd" })
 		vim.keymap.set("n", "<leader>fr", builtin.oldfiles, { desc = "[F]uzzy find [R]ecent files" })

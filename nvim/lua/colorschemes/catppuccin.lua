@@ -1,7 +1,7 @@
 return {
 	"catppuccin/nvim",
 	name = "catppuccin",
-    lazy = false,
+	lazy = false,
 	priority = 1000,
 	opts = {
 		flavour = "mocha", -- latte, frappe, macchiato, mocha
@@ -9,6 +9,9 @@ return {
 		custom_highlights = function(colors)
 			return {
 				NotifyBackground = { bg = colors.base },
+				NormalFloat = { bg = "none" },
+				FloatBorder = { bg = "none" },
+				FloatTitle = { bg = "none" },
 			}
 		end,
 	},

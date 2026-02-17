@@ -1,50 +1,59 @@
 return {
-	"nvim-treesitter/nvim-treesitter",
-	event = { "BufReadPre", "BufNewFile" },
-	build = ":TSUpdate",
-	dependencies = {
-		"windwp/nvim-ts-autotag",
-	},
-	config = function()
-		-- import nvim-treesitter plugin
-		local treesitter = require("nvim-treesitter.configs")
-
-		-- configure treesitter
-		treesitter.setup({ -- enable syntax highlighting
-			highlight = {
-				enable = true,
-			},
-			-- enable autotagging (w/ nvim-ts-autotag plugin)
-			autotag = {
-				enable = true,
-			},
-			-- ensure these language parsers are installed
-			ensure_installed = {
-				"json",
-				"javascript",
-				"typescript",
-				"tsx",
-				"yaml",
+	{
+		"nvim-treesitter/nvim-treesitter",
+		lazy = false,
+		build = ":TSUpdate",
+		branch = "main",
+		opts = function(_, opts)
+			local parsers = {
+				"bash",
+				"c",
+				"go",
 				"html",
-				"css",
-				"prisma",
+				"javascript",
+				"json",
+				"lua",
 				"markdown",
 				"markdown_inline",
-				"bash",
-				"lua",
-				"vim",
-				"dockerfile",
-				"gitignore",
-				"query",
-				"vimdoc",
-				"c",
-				"cpp",
 				"python",
-				"go",
+				"query",
+				"regex",
+				"toml",
+				"tsx",
+				"typescript",
+				"vim",
+				"vimdoc",
+				"xml",
+				"yaml",
 				"rust",
-				"haskell",
-				"terraform",
-			},
-		})
-	end,
+				"toml",
+			}
+			if type(opts.ensure_installed) == "table" then
+				vim.list_extend(opts.ensure_installed, parsers)
+			end
+
+			-- Example: enable/disable features
+			opts.highlight = { enable = true }
+			opts.indent = { enable = true }
+			opts.folds = { enable = true } -- LazyVim enables this by default
+
+			-- Enable treesitter
+			vim.api.nvim_create_autocmd("FileType", {
+				pattern = parsers,
+				callback = function()
+					vim.treesitter.start()
+				end,
+			})
+		end,
+	},
+
+	-- Separate spec for autotag (this replaces the old autotag module)
+	{
+		"windwp/nvim-ts-autotag",
+		event = { "BufReadPre", "BufNewFile" }, -- lazy-load on same events
+		opts = {}, -- defaults are fine; can customize here if needed
+		config = function(_, opts)
+			require("nvim-ts-autotag").setup(opts)
+		end,
+	},
 }

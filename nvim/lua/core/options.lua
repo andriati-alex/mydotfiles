@@ -7,8 +7,8 @@ vim.cmd("let g:netrw_liststyle = 3")
 --  For more options, you can see `:help option-list`
 
 -- Set leader key for keymaps
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
 
 -- line numbers
 vim.opt.relativenumber = true
@@ -27,7 +27,7 @@ vim.opt.autoindent = true
 vim.g.have_nerd_font = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
-vim.opt.mouse = 'a'
+vim.opt.mouse = "a"
 
 -- Don't show the mode, since it's already in the status line
 vim.opt.showmode = false
@@ -43,7 +43,7 @@ vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
 -- Keep signcolumn on by default
-vim.opt.signcolumn = 'auto'
+vim.opt.signcolumn = "auto"
 
 -- Decrease update time
 vim.opt.updatetime = 250
@@ -60,10 +60,10 @@ vim.opt.splitbelow = true
 --  See `:help 'list'`
 --  and `:help 'listchars'`
 vim.opt.list = true
-vim.opt.listchars = { tab = '» ', nbsp = '␣' }
+vim.opt.listchars = { tab = "» ", nbsp = "␣" }
 
 -- Preview substitutions live, as you type!
-vim.opt.inccommand = 'split'
+vim.opt.inccommand = "split"
 
 -- Show which line your cursor is on
 vim.opt.cursorline = true
